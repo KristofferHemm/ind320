@@ -7,10 +7,7 @@ def second_page():
     df['time'] = pd.to_datetime(df['time'])
 
     df = df.set_index('time')
-
-    st.write("Data table")
-    st.dataframe(df)
-
+    
     first_month = df[df.index.month == df.index[0].month]
 
     chart_df = pd.DataFrame({

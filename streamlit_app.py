@@ -4,7 +4,7 @@ from second import second_page
 # Define pages as functions
 def home():
     st.title("Home Page")
-    st.write("Welcome to the Home Page!")
+    st.write("Use the navigation bar to the left")
 
 def second():
     st.title("Second Page")
