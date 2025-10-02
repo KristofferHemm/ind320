@@ -1,4 +1,5 @@
 import streamlit as st
+from second import second_page
 
 # Define pages as functions
 def home():
@@ -7,7 +8,7 @@ def home():
 
 def second():
     st.title("Second Page")
-    st.write("This is the second")
+    second_page()
 
 def third():
     st.title("Third Page")
