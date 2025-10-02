@@ -8,6 +8,8 @@ def second_page():
 
     df = df.set_index('time')
 
+    st.dataframe(df)
+
     first_month = df[df.index.month == df.index[0].month]
 
     chart_df = pd.DataFrame({
