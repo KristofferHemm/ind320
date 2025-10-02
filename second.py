@@ -8,6 +8,7 @@ def second_page():
 
     df = df.set_index('time')
 
+    st.write("Data table")
     st.dataframe(df)
 
     first_month = df[df.index.month == df.index[0].month]
@@ -17,6 +18,7 @@ def second_page():
         'Trend': [first_month[col].tolist() for col in first_month.columns]
     })
 
+    st.write("Row-wise line chart of the first month of data")
     st.dataframe(
         chart_df,
         column_config={
