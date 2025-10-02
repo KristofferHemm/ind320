@@ -2,12 +2,13 @@ import pandas as pd
 import streamlit as st
 
 def second_page():
+
+    # Load data
     df = pd.read_csv('open-meteo-subset.csv')
 
+    # Choose the first month of the data
     df['time'] = pd.to_datetime(df['time'])
-
     df = df.set_index('time')
-    
     first_month = df[df.index.month == df.index[0].month]
 
     chart_df = pd.DataFrame({
@@ -15,7 +16,8 @@ def second_page():
         'Trend': [first_month[col].tolist() for col in first_month.columns]
     })
 
-    st.write("Row-wise line chart of the first month of data")
+    # Plot the first month of data
+    st.write('Row-wise line chart of the first month of data')
     st.dataframe(
         chart_df,
         column_config={

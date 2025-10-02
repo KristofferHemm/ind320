@@ -100,6 +100,4 @@ def third_page():
     # Plotting
     st.subheader("Time Series Plot")
     plotter(selected_column, column_options, filtered_df)
-
-
-third_page()
+    
