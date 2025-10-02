@@ -1,3 +1,25 @@
 import streamlit as st
 
-st.write('Hello world')
+# Define pages as functions
+def home():
+    st.title("Home Page")
+    st.write("Welcome to the Home Page!")
+
+def second():
+    st.title("Second Page")
+    st.write("This is the second")
+
+def third():
+    st.title("Third Page")
+    st.write("This is the third page")
+
+# Sidebar navigation
+page = st.sidebar.selectbox("Navigate", ["Home", "Second", "Third"])
+
+# Display the selected page
+if page == "Home":
+    home()
+elif page == "Second":
+    second()
+elif page == "Third":
+    third()
