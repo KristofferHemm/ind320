@@ -21,7 +21,7 @@ def fourth():
     fourth_page()
 
 # Sidebar navigation
-page = st.sidebar.selectbox("Navigate", ["Home", "Second", "Third"])
+page = st.sidebar.selectbox("Navigate", ["Home", "Second", "Third", "Fourth"])
 
 # Display the selected page
 if page == "Home":
@@ -30,3 +30,5 @@ elif page == "Second":
     second()
 elif page == "Third":
     third()
+elif page == "Fourth":
+    fourth()
