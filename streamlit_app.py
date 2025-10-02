@@ -1,5 +1,7 @@
 import streamlit as st
 from second import second_page
+from third import third_page
+from fourth import fourth_page
 
 # Define pages as functions
 def home():
@@ -12,7 +14,11 @@ def second():
 
 def third():
     st.title("Third Page")
-    st.write("This is the third page")
+    third_page()
+
+def fourth():
+    st.title("Fourth Page")
+    third_page()
 
 # Sidebar navigation
 page = st.sidebar.selectbox("Navigate", ["Home", "Second", "Third"])
