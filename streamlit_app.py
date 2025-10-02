@@ -18,7 +18,7 @@ def third():
 
 def fourth():
     st.title("Fourth Page")
-    third_page()
+    fourth_page()
 
 # Sidebar navigation
 page = st.sidebar.selectbox("Navigate", ["Home", "Second", "Third"])
