@@ -1,6 +1,7 @@
 import streamlit as st
 import altair as alt
 import pandas as pd
+from load_data import load_data
 
 def month_slicer(df):
 
@@ -23,6 +24,7 @@ def month_slicer(df):
 
     return selected_months
 
+
 def column_slicer(df):
 
     """
@@ -35,6 +37,7 @@ def column_slicer(df):
     selected_column = st.selectbox('Select which column to view', column_options)
     
     return column_options, selected_column
+
 
 def month_subset(df, selected_months):
 
@@ -83,14 +86,16 @@ def plotter(selected_column, column_options, df):
     # Display the chart
     st.altair_chart(chart, use_container_width=True)
 
+
 def third_page():
 
     """
     Create page containing line plot of the imported data.
     Controls: Drop down for selecting column and slider for selecting month range and
     """
+    
     # Load data
-    df = pd.read_csv('open-meteo-subset.csv')
+    df = load_data('open-meteo-subset.csv')
 
     # Create slicers and filter data
     selected_months = month_slicer(df)    

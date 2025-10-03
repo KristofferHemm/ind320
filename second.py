@@ -1,10 +1,15 @@
 import pandas as pd
 import streamlit as st
+from load_data import load_data
 
 def second_page():
-
+    
+    """
+    Create page containing row-wise line chart of the first month of data
+    """
+    
     # Load data
-    df = pd.read_csv('open-meteo-subset.csv')
+    df = load_data('open-meteo-subset.csv')
 
     # Choose the first month of the data
     df['time'] = pd.to_datetime(df['time'])
