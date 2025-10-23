@@ -9,7 +9,7 @@ def second_page():
     """
     
     # Load data
-    df = load_data('open-meteo-subset.csv')
+    df = load_data('ind320\\open-meteo-subset.csv')
 
     # Choose the first month of the data
     df['time'] = pd.to_datetime(df['time'])
