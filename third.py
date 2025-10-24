@@ -95,7 +95,7 @@ def third_page():
     """
     
     # Load data
-    df = load_data('ind320\\open-meteo-subset.csv')
+    df = load_data('open-meteo-subset.csv')
 
     # Create slicers and filter data
     selected_months = month_slicer(df)    
