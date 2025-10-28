@@ -136,3 +136,6 @@ def fourth_page():
                 st.warning("No data available for the selected filters.")
         else:
             st.info("Please select at least one production group and a month to display the chart.")
+
+    with st.expander("Data source"):
+        st.write(f'Elhub API https://api.elhub.no')
