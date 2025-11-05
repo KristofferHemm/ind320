@@ -16,5 +16,5 @@ D2Dbook/_build
 # Ignore env
 .env
 
-# Ignore secrest.toml
+# Ignore secrets.toml
 secrets.toml
