@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 from datetime import datetime
-#from load_data import load_data, load_data_from_meteo
+from load_data import load_data, load_data_from_meteo
 
 def second_page():
     
@@ -34,7 +34,6 @@ def second_page():
         index=years.index(st.session_state.selected_year)
     )
 
-    from load_data import load_data, load_data_from_meteo
     # Load data
     df = load_data_from_meteo(st.session_state.selected_year, st.session_state.selected_city)
 

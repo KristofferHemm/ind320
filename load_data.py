@@ -99,11 +99,11 @@ def load_data_from_meteo(year, city):
         inclusive = "left"
     )}
 
-    hourly_data["temperature_2m (°C)"] = hourly_temperature_2m
-    hourly_data["precipitation (mm)"] = hourly_precipitation
-    hourly_data["wind_speed_10m (m/s)"] = hourly_wind_speed_10m
-    hourly_data["wind_gusts_10m (m/s)"] = hourly_wind_gusts_10m
-    hourly_data["wind_direction_10m (°)"] = hourly_wind_direction_10m
+    hourly_data["temperature_2m"] = hourly_temperature_2m
+    hourly_data["precipitation"] = hourly_precipitation
+    hourly_data["wind_speed_10m"] = hourly_wind_speed_10m
+    hourly_data["wind_gusts_10m"] = hourly_wind_gusts_10m
+    hourly_data["wind_direction_10m"] = hourly_wind_direction_10m
 
     df = pd.DataFrame(data = hourly_data)
 
