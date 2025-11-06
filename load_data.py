@@ -68,46 +68,42 @@ def load_data_from_meteo(year=2021):
          "latitude": 60.393        
         }
     }
+
     df_hourly = pd.DataFrame(cities)
-    def create_dates(year):
-        start = f'{year}-01-01'
-        end = f'{year}-12-31'
-        return start, end
-    
-    def fetch_data(longitude, latitude, year):
-        start, end = create_dates(year)
-        params = {
-        "latitude": latitude,
-        "longitude": longitude,
-        "start_date": start,
-        "end_date": end,
-        "hourly": ["temperature_2m", "precipitation", "wind_speed_10m", "wind_gusts_10m", "wind_direction_10m"],
-        }
-        url = "https://historical-forecast-api.open-meteo.com/v1/forecast"
-        responses = openmeteo.weather_api(url, params=params)
-        response = responses[0]
-        # Process hourly data. The order of variables needs to be the same as requested.
-        hourly = response.Hourly()
-        hourly_temperature_2m_2m = hourly.Variables(0).ValuesAsNumpy()
-        hourly_precipitation = hourly.Variables(1).ValuesAsNumpy()
-        hourly_wind_speed_10m = hourly.Variables(2).ValuesAsNumpy()
-        hourly_wind_gusts_10m = hourly.Variables(3).ValuesAsNumpy()
-        hourly_wind_direction_10m = hourly.Variables(4).ValuesAsNumpy()
 
-        hourly_data = {"date": pd.date_range(
-            start = pd.to_datetime(hourly.Time(), unit = "s", utc = True),
-            end =  pd.to_datetime(hourly.TimeEnd(), unit = "s", utc = True),
-            freq = pd.Timedelta(seconds = hourly.Interval()),
-            inclusive = "left"
-        )}
+    start = f'{year}-01-01'
+    end = f'{year}-12-31'
 
-        hourly_data["temperature_2m"] = hourly_temperature_2m_2m
-        hourly_data["precipitation"] = hourly_precipitation
-        hourly_data["wind_speed_10m"] = hourly_wind_speed_10m
-        hourly_data["wind_gusts_10m"] = hourly_wind_gusts_10m
-        hourly_data["wind_direction_10m"] = hourly_wind_direction_10m
+    params = {
+    "latitude": df_hourly.Bergen.latitude, 
+    "longitude": df_hourly.Bergen.longitude,
+    "start_date": start,
+    "end_date": end,
+    "hourly": ["temperature_2m", "precipitation", "wind_speed_10m", "wind_gusts_10m", "wind_direction_10m"],
+    }
+    url = "https://historical-forecast-api.open-meteo.com/v1/forecast"
+    responses = openmeteo.weather_api(url, params=params)
+    response = responses[0]
+    # Process hourly data. The order of variables needs to be the same as requested.
+    hourly = response.Hourly()
+    hourly_temperature_2m_2m = hourly.Variables(0).ValuesAsNumpy()
+    hourly_precipitation = hourly.Variables(1).ValuesAsNumpy()
+    hourly_wind_speed_10m = hourly.Variables(2).ValuesAsNumpy()
+    hourly_wind_gusts_10m = hourly.Variables(3).ValuesAsNumpy()
+    hourly_wind_direction_10m = hourly.Variables(4).ValuesAsNumpy()
 
-        df_hourly = pd.DataFrame(data = hourly_data)
-        return df_hourly
-    
-    fetch_data(df_hourly.Bergen.longitude, df_hourly.Bergen.latitude, year)
+    hourly_data = {"date": pd.date_range(
+        start = pd.to_datetime(hourly.Time(), unit = "s", utc = True),
+        end =  pd.to_datetime(hourly.TimeEnd(), unit = "s", utc = True),
+        freq = pd.Timedelta(seconds = hourly.Interval()),
+        inclusive = "left"
+    )}
+
+    hourly_data["temperature_2m"] = hourly_temperature_2m_2m
+    hourly_data["precipitation"] = hourly_precipitation
+    hourly_data["wind_speed_10m"] = hourly_wind_speed_10m
+    hourly_data["wind_gusts_10m"] = hourly_wind_gusts_10m
+    hourly_data["wind_direction_10m"] = hourly_wind_direction_10m
+
+    return pd.DataFrame(data = hourly_data)
+
