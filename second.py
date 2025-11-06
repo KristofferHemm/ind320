@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from load_data import load_data
+from load_data import load_data, load_data_from_meteo
 
 def second_page():
     
@@ -9,11 +9,12 @@ def second_page():
     """
     
     # Load data
-    df = load_data('open-meteo-subset.csv')
+    #df = load_data('open-meteo-subset.csv')
+    df = load_data_from_meteo()
 
     # Choose the first month of the data
-    df['time'] = pd.to_datetime(df['time'])
-    df = df.set_index('time')
+    df['date'] = pd.to_datetime(df['date'])
+    df = df.set_index('date')
     first_month = df[df.index.month == df.index[0].month]
 
     chart_df = pd.DataFrame({
