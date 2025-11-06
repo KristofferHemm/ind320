@@ -11,9 +11,9 @@ def second_page():
     # Load data
     #df = load_data('open-meteo-subset.csv')
     df = load_data_from_meteo()
-    df.head()
+
     # Choose the first month of the data
-    """df['date'] = pd.to_datetime(df['date'])
+    df['date'] = pd.to_datetime(df['date'])
     df = df.set_index('date')
     first_month = df[df.index.month == df.index[0].month]
 
@@ -34,4 +34,4 @@ def second_page():
             )
         },
         hide_index=True
-    )"""
+    )
