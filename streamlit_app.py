@@ -27,7 +27,7 @@ def fifth():
     fifth_page()
 
 # Sidebar navigation
-page = st.sidebar.selectbox("Navigate", ["Home", "Second", "Third", "Fourth", "Fifth"])
+page = st.sidebar.selectbox("Navigate", ["Home","Fourth", "Second", "Third", "Fifth"])
 
 # Display the selected page
 if page == "Home":
