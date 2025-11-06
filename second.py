@@ -9,8 +9,8 @@ def second_page():
     """
     
     # Load data
-    #df = load_data('open-meteo-subset.csv')
-    df = load_data_from_meteo()
+    df = load_data('open-meteo-subset.csv')
+    #df = load_data_from_meteo()
 
     # Choose the first month of the data
     #df['date'] = pd.to_datetime(df['date'])
