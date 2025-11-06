@@ -4,6 +4,8 @@ from second import second_page
 from third import third_page
 from fourth import fourth_page
 from fifth import fifth_page
+from newA import newA
+from newB import newB
 
 # Define pages as functions
 def home():
@@ -26,8 +28,16 @@ def fifth():
     st.title("Fifth Page")
     fifth_page()
 
+def newA():
+    st.title("New A")
+    newA()
+
+def newB():
+    st.title("New B")
+    newB()
+
 # Sidebar navigation
-page = st.sidebar.selectbox("Navigate", ["Home","Fourth", "Second", "Third", "Fifth"])
+page = st.sidebar.selectbox("Navigate", ["Home","Fourth", "newA", "Second", "Third", "newB", "Fifth"])
 
 # Display the selected page
 if page == "Home":
