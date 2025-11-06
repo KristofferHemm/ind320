@@ -8,10 +8,28 @@ def second_page():
     """
     Create page containing row-wise line chart of the first month of data
     """
+
     
+    st.write("Please select the city and year you want to explore below.")
+    st.write("Default selection is for Bergen in 2021.")
+
+
+    # Generate list of cities for user selection
+    cities = [ "Bergen", "Oslo", "Kristiansand", "Trondheim", "Tromsø"]
+    selected_city = st.selectbox(
+    "Select a city:",
+    options=cities
+    )
+
+    # Generate list of years for user selection
+    years = list(range(2021, 2025, 1))
+    selected_year = st.selectbox(
+    "Select a year:",
+    options=years
+    )
+
     # Load data
-    #df = load_data('open-meteo-subset.csv')
-    df = load_data_from_meteo()
+    df = load_data_from_meteo(selected_year, selected_city)
 
     # Choose the first month of the data
     df['date'] = pd.to_datetime(df["date"])

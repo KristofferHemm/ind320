@@ -36,7 +36,7 @@ def load_data_from_mongodb():
     return df
 
 @st.cache_data
-def load_data_from_meteo(year=2021):
+def load_data_from_meteo(year=2021, city='Bergen'):
     # Setup the Open-Meteo API client with cache and retry on error
     cache_session = requests_cache.CachedSession('.cache', expire_after = 3600)
     retry_session = retry(cache_session, retries = 5, backoff_factor = 0.2)
@@ -69,14 +69,14 @@ def load_data_from_meteo(year=2021):
         }
     }
 
-    df_hourly = pd.DataFrame(cities)
+    selected_city = cities[city]
 
     start = f'{year}-01-01'
     end = f'{year}-12-31'
 
     params = {
-    "latitude": df_hourly.Bergen.latitude, 
-    "longitude": df_hourly.Bergen.longitude,
+    "latitude": selected_city['latitude'], 
+    "longitude": selected_city['longitude'],
     "start_date": start,
     "end_date": end,
     "hourly": ["temperature_2m", "precipitation", "wind_speed_10m", "wind_gusts_10m", "wind_direction_10m"],
@@ -112,3 +112,5 @@ def load_data_from_meteo(year=2021):
         df[col] = df[col].astype("float64")
 
     return df
+
+df = load_data_from_meteo()
