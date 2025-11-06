@@ -13,7 +13,7 @@ def second_page():
     df = load_data_from_meteo()
 
     # Choose the first month of the data
-    df['date'] = pd.to_datetime(df['date'])
+    #df['date'] = pd.to_datetime(df['date'])
     df = df.set_index('date')
     first_month = df[df.index.month == df.index[0].month]
 
