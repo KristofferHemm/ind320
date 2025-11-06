@@ -15,7 +15,7 @@ def second_page():
     # Choose the first month of the data
     #df['date'] = pd.to_datetime(df['date'])
     #df = df.set_index('date')
-    print(df.head())
+    df.head()
     """first_month = df[df.index.month == df.index[0].month]
 
     chart_df = pd.DataFrame({
