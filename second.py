@@ -15,7 +15,8 @@ def second_page():
     # Choose the first month of the data
     #df['date'] = pd.to_datetime(df['date'])
     df = df.set_index('date')
-    first_month = df[df.index.month == df.index[0].month]
+    print(df.head())
+    f"""irst_month = df[df.index.month == df.index[0].month]
 
     chart_df = pd.DataFrame({
         'Series': first_month.columns,
@@ -34,4 +35,4 @@ def second_page():
             )
         },
         hide_index=True
-    )
+    )"""
