@@ -1,0 +1,3 @@
+
+def newA():
+    pass
