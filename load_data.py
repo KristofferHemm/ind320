@@ -86,7 +86,7 @@ def load_data_from_meteo(year=2021):
     response = responses[0]
     # Process hourly data. The order of variables needs to be the same as requested.
     hourly = response.Hourly()
-    hourly_temperature_2m_2m = hourly.Variables(0).ValuesAsNumpy()
+    hourly_temperature_2m = hourly.Variables(0).ValuesAsNumpy()
     hourly_precipitation = hourly.Variables(1).ValuesAsNumpy()
     hourly_wind_speed_10m = hourly.Variables(2).ValuesAsNumpy()
     hourly_wind_gusts_10m = hourly.Variables(3).ValuesAsNumpy()
@@ -99,11 +99,16 @@ def load_data_from_meteo(year=2021):
         inclusive = "left"
     )}
 
-    hourly_data["temperature_2m"] = hourly_temperature_2m_2m
-    hourly_data["precipitation"] = hourly_precipitation
-    hourly_data["wind_speed_10m"] = hourly_wind_speed_10m
-    hourly_data["wind_gusts_10m"] = hourly_wind_gusts_10m
-    hourly_data["wind_direction_10m"] = hourly_wind_direction_10m
+    hourly_data["temperature_2m (°C)"] = hourly_temperature_2m
+    hourly_data["precipitation (mm)"] = hourly_precipitation
+    hourly_data["wind_speed_10m (m/s)"] = hourly_wind_speed_10m
+    hourly_data["wind_gusts_10m (m/s)"] = hourly_wind_gusts_10m
+    hourly_data["wind_direction_10m (°)"] = hourly_wind_direction_10m
 
-    return pd.DataFrame(data = hourly_data)
+    df = pd.DataFrame(data = hourly_data)
 
+    # Need to convert to float64 for the data to work in Streamlit
+    for col in df.select_dtypes(include=["float32", "float16"]).columns:
+        df[col] = df[col].astype("float64")
+
+    return df
