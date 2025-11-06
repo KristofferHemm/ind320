@@ -36,7 +36,7 @@ def load_data_from_mongodb():
     return df
 
 @st.cache_data
-def load_data_from_meteo(year=2021, city='Bergen'):
+def load_data_from_meteo(year, city):
     # Setup the Open-Meteo API client with cache and retry on error
     cache_session = requests_cache.CachedSession('.cache', expire_after = 3600)
     retry_session = retry(cache_session, retries = 5, backoff_factor = 0.2)
@@ -112,5 +112,3 @@ def load_data_from_meteo(year=2021, city='Bergen'):
         df[col] = df[col].astype("float64")
 
     return df
-
-df = load_data_from_meteo()
