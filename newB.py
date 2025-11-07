@@ -7,7 +7,7 @@ from scipy.fft import dct, idct
 from sklearn.neighbors import LocalOutlierFactor
 from load_data import load_data_from_meteo
 
-def plot_summary_temperature(df_hourly, cutoff=100, k=3.0):
+def plot_summary_satv(df, cutoff=100, k=3.0):
     """
     Input:
     df : pd.DataFrame
@@ -20,22 +20,20 @@ def plot_summary_temperature(df_hourly, cutoff=100, k=3.0):
     summary : pd.DataFrame
     """
 
-    df = df_hourly.copy()
+    df = df.copy()
     
     # High pass filtering
     temp_dct_ortho = dct(df.temperature_2m, norm='ortho')
-
     temp_dct_ortho[:cutoff] = 0
     df['temp_highpass'] = idct(temp_dct_ortho, norm='ortho')
 
     # Seasonally adjusted temperature variations
     median_satv = np.median(df['temp_highpass'])
     mad_satv = np.median(np.abs(df['temp_highpass'] - median_satv))
-    
-    k = 3.0  # typical SPC multiplier
     ucl = median_satv + k * mad_satv
     lcl = median_satv - k * mad_satv
-    
+
+    # Add outliers to df
     df['is_outlier'] = (df['temp_highpass'] > ucl) | (df['temp_highpass'] < lcl)
 
     # Plotting
@@ -84,11 +82,30 @@ def plot_summary_temperature(df_hourly, cutoff=100, k=3.0):
         legend=dict(yanchor='top', y=0.98, xanchor='left', x=0.01),
         height=600
     )
-    
-    
-    summary = df.loc[df['is_outlier'], ['date', 'temperature_2m', 'temp_highpass']].copy()
-    summary['deviation'] = df.loc[df['is_outlier'], 'temp_highpass'] - median_satv
-    summary['limit'] = np.where(summary['temp_highpass'] > ucl, 'above UCL', 'below LCL')
+
+    # Create summary
+    total_points = len(df)
+    n_outliers = df['is_outlier'].sum()
+    outlier_pct = 100 * n_outliers / total_points
+
+    normal_mean = df.loc[~df['is_outlier'], 'temperature_2m'].mean() if n_outliers < total_points else np.nan
+    outlier_mean = df.loc[df['is_outlier'], 'temperature_2m'].mean() if n_outliers > 0 else np.nan
+    outlier_max = df.loc[df['is_outlier'], 'temperature_2m'].max() if n_outliers > 0 else np.nan
+    outlier_min = df.loc[df['is_outlier'], 'temperature_2m'].min() if n_outliers > 0 else np.nan
+    first_outlier = df.loc[df['is_outlier'], 'date'].min() if n_outliers > 0 else np.nan
+    last_outlier = df.loc[df['is_outlier'], 'date'].max() if n_outliers > 0 else np.nan
+
+    summary = pd.DataFrame([{
+        'Total Points': total_points,
+        'Detected Outliers': n_outliers,
+        'Outlier %': round(outlier_pct, 3),
+        'Normal Mean': round(normal_mean, 3),
+        'Outlier Mean': round(outlier_mean, 3),
+        'Outlier Max': round(outlier_max, 3),
+        'Outlier Min': round(outlier_min, 3),
+        'First Outlier': first_outlier,
+        'Last Outlier': last_outlier
+    }])
 
     return fig, summary
 
@@ -174,7 +191,7 @@ def newB_page():
         st.header("SPC analysis")
         st.write(f"Using data from year: {selected_year}")
         st.write(f"Using data from city: {selected_city}")
-        fig, summary = plot_summary_temperature(df)
+        fig, summary = plot_summary_satv(df)
         st.plotly_chart(fig)
         st.write(summary.head())
 
