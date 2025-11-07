@@ -41,8 +41,8 @@ def plot_summary_satv(df, cutoff=100, k=3.0):
     
     # Original temperature_2m trace
     fig.add_trace(go.Scatter(
-        x=df_hourly['date'],
-        y=df_hourly['temperature_2m'],
+        x=df['date'],
+        y=df['temperature_2m'],
         mode='lines',
         name='Original temperature'
     ))
