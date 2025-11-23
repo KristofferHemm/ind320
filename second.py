@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
-from load_data import load_data
+from datetime import datetime
+from load_data import load_data, load_data_from_meteo
 
 def second_page():
     
@@ -8,12 +9,37 @@ def second_page():
     Create page containing row-wise line chart of the first month of data
     """
     
+    st.write("Please select the city and year you want to explore below.")
+    st.write("Default selection is for Bergen in 2021.")
+
+    # Generate list of cities for user selection and set it as the session state
+    if 'selected_city' not in st.session_state:
+        st.session_state.selected_city = "Bergen"
+
+    cities = ["Bergen", "Oslo", "Kristiansand", "Trondheim", "Tromsø"]
+    st.session_state.selected_city = st.selectbox(
+    "Select a city:",
+    options=cities,
+    index=cities.index(st.session_state.selected_city)
+    )
+
+    # Generate list of years for user selection and set it as the session state
+    if 'selected_year' not in st.session_state:
+        st.session_state.selected_year = 2021
+
+    years = list(range(2021, 2025, 1))
+    st.session_state.selected_year = st.selectbox(
+        "Select a year:",
+        options=years,
+        index=years.index(st.session_state.selected_year)
+    )
+
     # Load data
-    df = load_data('open-meteo-subset.csv')
+    df = load_data_from_meteo(st.session_state.selected_year, st.session_state.selected_city)
 
     # Choose the first month of the data
-    df['time'] = pd.to_datetime(df['time'])
-    df = df.set_index('time')
+    df['date'] = pd.to_datetime(df["date"])
+    df = df.set_index('date')
     first_month = df[df.index.month == df.index[0].month]
 
     chart_df = pd.DataFrame({

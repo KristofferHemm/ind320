@@ -25,3 +25,6 @@ kaleido
 lipsum
 pymongo
 streamlit
+openmeteo-requests
+requests-cache
+retry-requests
