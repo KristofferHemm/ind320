@@ -176,3 +176,42 @@ def plot_summary_lof(df, outlier_fraction=0.01):
     summary = pd.DataFrame(summary_data)
 
     return fig, summary
+
+
+def newB_page():
+    
+    st.write("Please choose which plot you want to see below.")
+
+    tab1, tab2 = st.tabs(["SPC analysis", "LOF analysis"])
+
+    if 'selected_year' in st.session_state:
+        selected_year = st.session_state.selected_year
+        
+    else:
+        st.warning("Please select a year on the second page first")
+
+    if 'selected_city' in st.session_state:
+        selected_city = st.session_state.selected_city
+    else:
+        st.warning("Please select a city on the second page first")
+
+    # Load data
+    df = load_data_from_meteo(st.session_state.selected_year, st.session_state.selected_city)
+    
+    # Content for Tab 1
+    with tab1:
+        st.header("SPC analysis")
+        st.write(f"Using data from year: {selected_year}")
+        st.write(f"Using data from city: {selected_city}")
+        fig, summary = plot_summary_satv(df)
+        st.plotly_chart(fig)
+        st.write(summary.head())
+
+    # Content for Tab 2
+    with tab2:
+        st.header("LOF analysis")
+        st.write(f"Using data from year: {selected_year}")
+        st.write(f"Using data from city: {selected_city}")
+        fig, summary = plot_precip_anomalies(df)
+        st.plotly_chart(fig)
+        st.write(summary)
