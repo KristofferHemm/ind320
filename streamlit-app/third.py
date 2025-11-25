@@ -1,7 +1,7 @@
 import streamlit as st
 import altair as alt
 import pandas as pd
-from load_data import load_data
+from load_data import load_data, load_data_from_meteo
 
 def month_slicer(df):
 
@@ -95,7 +95,7 @@ def third_page():
     """
     
     # Load data
-    df = load_data('data/open-meteo-subset.csv')
+    df = load_data_from_meteo()
 
     # Create slicers and filter data
     selected_months = month_slicer(df)    
