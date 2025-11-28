@@ -2,7 +2,7 @@ import streamlit as st
 import plotly.express as px
 from load_data import load_data_from_mongodb_no_arguments
 
-def fourth_page():
+def energy_production_page():
 
     st.subheader("Overview of Norwegian energy production")
     st.write("Please click the Query Data button to load data into the plots.")
