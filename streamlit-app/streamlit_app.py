@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from home import home_page
 from weather_data import weather_data_page
-from fourth import fourth_page
+from energy_production import energy_production_page
 from newA import newA_page
 from weather_data_outliers import weather_data_outliers_page
 from map import map_page
@@ -17,8 +17,8 @@ def home():
 def weather_data():
     weather_data_page()
 
-def fourth():
-    fourth_page()
+def energy_production():
+    energy_production_page()
 
 def newA():
     newA_page()
@@ -39,7 +39,7 @@ def sliding_window():
     sliding_window_page()
 
 # Sidebar navigation
-page = st.sidebar.selectbox("Navigate", ["Home", "Weather data", "Weather data outliers", "Energy production", "Energy plots", "SARIMAX", "Energy map", "Snowdrift", "Sliding window"])
+page = st.sidebar.selectbox("Navigate", ["Home", "Weather data", "Weather data outliers", "Energy production", "Energy plots", "Energy forecasting", "Energy map", "Snowdrift", "Sliding window"])
 
 # Display the selected page
 if page == "Home":
@@ -47,7 +47,7 @@ if page == "Home":
 elif page == "Weather data":
     weather_data()
 elif page == "Energy production":
-    fourth()
+    energy_production()
 elif page == "Energy plots":
     newA()
 elif page == "Weather data outliers":
@@ -56,7 +56,7 @@ elif page == "Energy map":
     map()
 elif page == "Snowdrift":
     snowdrift()
-elif page == "SARIMAX":
+elif page == "Energy forecasting":
     sarimax()
 elif page == "Sliding window":
     sliding_window()
