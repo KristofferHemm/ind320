@@ -3,7 +3,7 @@ import pandas as pd
 from home import home_page
 from weather_data import weather_data_page
 from energy_production import energy_production_page
-from newA import newA_page
+from energy_plots import energy_plots_page
 from weather_data_outliers import weather_data_outliers_page
 from map import map_page
 from snowdrift import snowdrift_page
@@ -20,8 +20,8 @@ def weather_data():
 def energy_production():
     energy_production_page()
 
-def newA():
-    newA_page()
+def energy_plots():
+    energy_plots_page()
 
 def weather_data_ouliers():
     weather_data_outliers_page()
@@ -49,7 +49,7 @@ elif page == "Weather data":
 elif page == "Energy production":
     energy_production()
 elif page == "Energy plots":
-    newA()
+    energy_plots()
 elif page == "Weather data outliers":
     weather_data_ouliers()
 elif page == "Energy map":

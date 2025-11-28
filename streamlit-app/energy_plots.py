@@ -189,7 +189,7 @@ def plot_spectrogram_stft(df, pricearea='NO1', productiongroup='hydro',
     return fig
 
 
-def newA_page():
+def energy_plots_page():
 
     # Initialize df
     df = None
