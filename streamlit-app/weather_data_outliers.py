@@ -183,6 +183,8 @@ def weather_data_outliers_page():
     
     st.subheader("Outlier and anomalie detection in the Norwegian weather data")
     st.write("The data displayed on this page is reflected in the choice you made on the Weather data page.")
+    st.write("The city of Bergen for the year 2021 is the default selection.")
+    st.write("If you made a selection on the Weather data page, this selection will be reflected on this page.")
     st.write("Please choose which plot you want to see below.")
 
     tab1, tab2 = st.tabs(["SPC analysis", "LOF analysis"])
