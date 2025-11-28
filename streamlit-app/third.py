@@ -100,10 +100,10 @@ def third_page():
 
     cities = ["Bergen", "Oslo", "Kristiansand", "Trondheim", "Tromsø"]
     st.session_state.selected_city = st.selectbox(
-    "Select a city:",
-    options=cities,
-    index=cities.index(st.session_state.selected_city)
-    )
+        "Select a city:",
+        options=cities,
+        index=cities.index(st.session_state.selected_city)
+        )
 
     # Generate list of years for user selection and set it as the session state
     if 'selected_year' not in st.session_state:
