@@ -15,7 +15,8 @@ def load_data(file):
 @st.cache_data
 def load_json(file):
     base_dir = Path(__file__).resolve()
-    path = base_dir / "data" / "energydata.geojson"
+    path = base_dir / file
+    st.write(path)
     with open(path, "r") as f:
         return json.load(f)
 
