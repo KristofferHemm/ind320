@@ -187,6 +187,9 @@ def weather_data_outliers_page():
 
     tab1, tab2 = st.tabs(["SPC analysis", "LOF analysis"])
 
+    if 'selected_year' not in st.session_state:
+        st.session_state.selected_year = None
+
     if 'selected_year' in st.session_state:
         selected_year = st.session_state.selected_year
         
