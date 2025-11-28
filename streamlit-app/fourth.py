@@ -4,6 +4,9 @@ from load_data import load_data_from_mongodb_no_arguments
 
 def fourth_page():
 
+    st.subheader("Overview of Norwegian energy production")
+    st.write("Please click the Query Data button to load data into the plots.")
+
     # Initialize df
     df = None
 
@@ -141,7 +144,7 @@ def fourth_page():
                     st.warning("No data available for the selected filters.")
             else:
                 st.info("Please select at least one production group and a month to display the chart.")
-                
+
     else:
             st.write("Please query the data to see the plots")
 

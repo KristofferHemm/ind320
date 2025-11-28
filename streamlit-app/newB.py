@@ -181,8 +181,8 @@ def plot_precip_anomalies(df, outlier_fraction=0.01):
 
 def newB_page():
     
-    st.subheader("Outlier and anomalie detection in the Norwegian energy data")
-    st.write("Data displayed on this page is reflected in the choice you made on the Weather data page.")
+    st.subheader("Outlier and anomalie detection in the Norwegian weather data")
+    st.write("The data displayed on this page is reflected in the choice you made on the Weather data page.")
     st.write("Please choose which plot you want to see below.")
 
     tab1, tab2 = st.tabs(["SPC analysis", "LOF analysis"])

@@ -18,15 +18,12 @@ def third():
     third_page()
 
 def fourth():
-    st.title("Fourth Page")
     fourth_page()
 
 def newA():
-    st.title("New A")
     newA_page()
 
 def newB():
-    st.title("New B")
     newB_page()
 
 def map():
@@ -42,14 +39,14 @@ def sliding_window():
     sliding_window_page()
 
 # Sidebar navigation
-page = st.sidebar.selectbox("Navigate", ["Home", "Weather data", "Weather data outliers", "Energy map", "Fourth", "newA", "Sarimax", "Snowdrift", "Sliding window"])
+page = st.sidebar.selectbox("Navigate", ["Home", "Weather data", "Weather data outliers", "Energy production", "Energy map", "newA", "Sarimax", "Snowdrift", "Sliding window"])
 
 # Display the selected page
 if page == "Home":
     home()
 elif page == "Weather data":
     third()
-elif page == "Fourth":
+elif page == "Energy production":
     fourth()
 elif page == "newA":
     newA()
