@@ -74,7 +74,7 @@ def controls():
             st.error("Please enter a group name")
         else:
             with st.spinner("Querying database..."):
-                st.session_state.query_results  = load_data_from_mongodb(
+                st.session_state.query_results = load_data_from_mongodb(
                     namespace,
                     st.session_state.group_selected,
                     from_date,

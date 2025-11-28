@@ -56,7 +56,6 @@ def fourth_page():
         st.plotly_chart(fig, use_container_width=True)
     
 
-
     with col2:
         
         st.header("Energy Production Analysis")

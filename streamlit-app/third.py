@@ -11,7 +11,7 @@ def month_slicer(df):
     Output: tuple
     """
 
-    df['time'] = pd.to_datetime(df['time'])
+    df['time'] = pd.to_datetime(df['date'])
     df['month'] = df['time'].dt.to_period('M').astype(str)
 
     # Create month slicer
@@ -33,7 +33,7 @@ def column_slicer(df):
     Output: list, string
     """
 
-    column_options = ['All columns'] + [col for col in df.columns if col not in ['time', 'month']]
+    column_options = ['All columns'] + [col for col in df.columns if col not in ['date', 'time', 'month']]
     selected_column = st.selectbox('Select which column to view', column_options)
     
     return column_options, selected_column
@@ -95,7 +95,7 @@ def third_page():
     """
     
     # Load data
-    df = load_data_from_meteo()
+    df = load_data_from_meteo(st.session_state.selected_year, st.session_state.selected_city)
 
     # Create slicers and filter data
     selected_months = month_slicer(df)    
