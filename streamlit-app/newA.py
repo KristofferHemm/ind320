@@ -194,6 +194,8 @@ def newA_page():
     # Initialize df
     df = None
     
+    st.subheader("Seasonal-Trend decomposition and Spectrogram of energy data")
+    st.write("Please click the Query Data button to load data into the plots.")
     st.write("Please choose which plot you want to see below.")
 
     tab1, tab2 = st.tabs(["STL analysis", "Spectrogram"])
