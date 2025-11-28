@@ -28,3 +28,6 @@ streamlit
 openmeteo-requests
 requests-cache
 retry-requests
+streamlit_folium
+shapely
+geopandas
