@@ -4,7 +4,7 @@ from home import home_page
 from weather_data import weather_data_page
 from fourth import fourth_page
 from newA import newA_page
-from newB import newB_page
+from weather_data_outliers import weather_data_outliers_page
 from map import map_page
 from snowdrift import snowdrift_page
 from sarimax import sarimax_page
@@ -23,8 +23,8 @@ def fourth():
 def newA():
     newA_page()
 
-def newB():
-    newB_page()
+def weather_data_ouliers():
+    weather_data_outliers_page()
 
 def map():
     map_page()
@@ -51,7 +51,7 @@ elif page == "Energy production":
 elif page == "Energy plots":
     newA()
 elif page == "Weather data outliers":
-    newB()
+    weather_data_ouliers()
 elif page == "Energy map":
     map()
 elif page == "Snowdrift":
