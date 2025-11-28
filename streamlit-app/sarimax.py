@@ -11,7 +11,7 @@ def sarimax():
     # Initialize session state for storing results
     if 'df' not in st.session_state:
         st.session_state.df = None
-        
+
     st.title("SARIMAX Forecasting of energy production and consumption")
 
     # Select timeframe for training and forecast
@@ -33,8 +33,6 @@ def sarimax():
             min_value=date(2021, 1, 1),
             max_value=date(2024, 12, 31)
         )
-
-    forecast_days = st.number_input("Type in number of days to forecast. Default is 30 days", value=30)
 
     # Select production/consumption    
     st.session_state.database = st.radio(
@@ -84,6 +82,8 @@ def sarimax():
 
         # Setting parameters
         st.subheader("SARIMAX Parameters")
+        
+        forecast_days = st.number_input("Type in number of days to forecast. Default is 30 days", value=30)
 
         colA, colB, colC = st.columns(3)
 
