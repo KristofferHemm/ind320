@@ -7,6 +7,7 @@ from streamlit_folium import st_folium
 from load_data import load_json, load_data_from_mongodb
 import pandas as pd
 import geopandas as gpd
+from pathlib import Path 
 
 # Initialize session state for storing results
 if 'database' not in st.session_state:
@@ -86,8 +87,12 @@ def controls():
 def choropleth():
 
     # Load GeoJSON data
-    data = load_json("data/energydata.geojson")
-    gdf = gpd.read_file("data/energydata.geojson")
+    file = "data/energydata.geojson"
+    base_dir = Path(__file__).resolve().parent
+    path = base_dir / file
+    st.write(path)
+    data = load_json(path)
+    gdf = gpd.read_file(path)
 
     # Initialize session state for clicked location
     if 'clicked_lat' not in st.session_state:

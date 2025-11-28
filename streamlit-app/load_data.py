@@ -6,7 +6,6 @@ import openmeteo_requests
 from retry_requests import retry
 import requests_cache
 from datetime import datetime, time
-from pathlib import Path 
 
 @st.cache_data
 def load_data(file):
@@ -14,10 +13,7 @@ def load_data(file):
 
 @st.cache_data
 def load_json(file):
-    base_dir = Path(__file__).resolve().parent
-    path = base_dir / file
-    st.write(path)
-    with open(path, "r") as f:
+    with open(file, "r") as f:
         return json.load(f)
 
 @st.cache_data
