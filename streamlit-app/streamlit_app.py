@@ -43,7 +43,7 @@ def sliding_window():
     sliding_window_page()
 
 # Sidebar navigation
-page = st.sidebar.selectbox("Navigate", ["Home", "Map", "Snowdrift", "Sliding window", "Sarimax", "Fourth", "newA", "Third", "newB"])
+page = st.sidebar.selectbox("Navigate", ["Home", "Map", "Third", "newB", "Snowdrift", "Fourth", "newA", "Sarimax", "Sliding window"])
 
 # Display the selected page
 if page == "Home":
