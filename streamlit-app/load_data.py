@@ -1,35 +1,64 @@
 import streamlit as st
 import pandas as pd
+import json
 from pymongo import MongoClient
 import openmeteo_requests
 from retry_requests import retry
 import requests_cache
+from datetime import datetime, time
 
 @st.cache_data
 def load_data(file):
     return pd.read_csv(file)
 
 @st.cache_data
-def load_data_from_mongodb():
+def load_json(file):
+    with open(file, "r") as f:
+        return json.load(f)
+
+@st.cache_data
+def load_data_from_mongodb(namespace, group, start_date=None, end_date=None):
     """Load all data from MongoDB and return as pandas DataFrame"""
+
     # Connecting to MongoDB
     uri = st.secrets["mongo"]["uri"]
     db_name = st.secrets["mongo"]["database"]
     client = MongoClient(uri)
     db = client[db_name]
-    collection = db["production_NO1"]
+    collection = db[namespace]
 
-    # Fetch all documents
-    #documents = list(collection.find())
-    documents = list(collection.find())
+    # Determine the correct field name based on namespace
+    if namespace == 'production_NO1':
+        group_field = 'productiongroup'
+    elif namespace == 'consumption_NO1':
+        group_field = 'consumptiongroup'
+    else:
+        raise ValueError("Invalid namespace")
     
-    # Close the connection
+    # Build the query
+    query = {group_field: group}
+    
+    # Add date filter if dates are provided
+    if start_date is not None and end_date is not None:
+        start_datetime = datetime.combine(start_date, time(0, 0, 0))
+        end_datetime = datetime.combine(end_date, time(23, 59, 59))
+        
+        # Use 'starttime' as the datetime field name (based on your second query)
+        query['starttime'] = {
+            '$gte': start_datetime,
+            '$lte': end_datetime
+        }
+
+    # Execute query
+    results = list(collection.find(query))
+    
+    # Close connection
     client.close()
     
     # Convert to DataFrame
-    df = pd.DataFrame(documents)
+    df = pd.DataFrame(results)
     
-    # Optional: Remove the MongoDB _id field if you don't need it
+    # Remove the MongoDB _id field 
     if '_id' in df.columns:
         df = df.drop('_id', axis=1)
     
