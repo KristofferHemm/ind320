@@ -31,7 +31,7 @@ def calculate_snowdrift():
 
     years = list(range(start_year, end_year+2))
 
-    # Query MongoDB
+    # Query Meteo
     if st.button("Query Data"):
         with st.spinner("Querying Meteo API..."):
             data = [load_data_from_meteo_snow(year) for year in years]

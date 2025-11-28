@@ -2,12 +2,14 @@ import streamlit as st
 import pandas as pd
 from second import second_page
 from third import third_page
-#from fourth import fourth_page
+from fourth import fourth_page
 from fifth import fifth_page
-#from newA import newA_page
+from newA import newA_page
 from newB import newB_page
 from map import map_page
 from snowdrift import snowdrift_page
+from sarimax import sarimax_page
+from sliding_window_correlation import sliding_window_page
 
 # Define pages as functions
 def home():
@@ -22,32 +24,36 @@ def third():
     st.title("Third Page")
     third_page()
 
-'''def fourth():
+def fourth():
     st.title("Fourth Page")
-    fourth_page()'''
+    fourth_page()
 
 def fifth():
     st.title("Fifth Page")
     fifth_page()
 
-'''def newA():
+def newA():
     st.title("New A")
-    newA_page()'''
+    newA_page()
 
 def newB():
     st.title("New B")
     newB_page()
 
 def map():
-    st.title("Map")
     map_page()
 
 def snowdrift():
-    st.title("Snowdrift")
     snowdrift_page()
 
+def sarimax():
+    sarimax_page()
+
+def sliding_window():
+    sliding_window_page()
+
 # Sidebar navigation
-page = st.sidebar.selectbox("Navigate", ["Home", "Map", "Snowdrift", "Fourth", "newA", "Second", "Third", "newB", "Fifth"])
+page = st.sidebar.selectbox("Navigate", ["Home", "Map", "Snowdrift", "Sliding window", "Sarimax", "Fourth", "newA", "Second", "Third", "newB", "Fifth"])
 
 # Display the selected page
 if page == "Home":
@@ -56,15 +62,19 @@ elif page == "Second":
     second()
 elif page == "Third":
     third()
-#elif page == "Fourth":
-#    fourth()
+elif page == "Fourth":
+    fourth()
 elif page == "Fifth":
     fifth()
-#elif page == "newA":
-#    newA()
+elif page == "newA":
+    newA()
 elif page == "newB":
     newB()
 elif page == "Map":
     map()
 elif page == "Snowdrift":
     snowdrift()
+elif page == "Sarimax":
+    sarimax()
+elif page == "Sliding window":
+    sliding_window()
