@@ -87,7 +87,7 @@ def plotter(selected_column, column_options, df):
     st.altair_chart(chart, use_container_width=True)
 
 
-def third_page():
+def weather_data_page():
 
     """
     Create page containing line plot of the imported data.

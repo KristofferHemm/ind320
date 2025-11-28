@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from home import home_page
-from third import third_page
+from weather_data import weather_data_page
 from fourth import fourth_page
 from newA import newA_page
 from newB import newB_page
@@ -14,8 +14,8 @@ from sliding_window_correlation import sliding_window_page
 def home():
     home_page()
 
-def third():
-    third_page()
+def weather_data():
+    weather_data_page()
 
 def fourth():
     fourth_page()
@@ -45,7 +45,7 @@ page = st.sidebar.selectbox("Navigate", ["Home", "Weather data", "Weather data o
 if page == "Home":
     home()
 elif page == "Weather data":
-    third()
+    weather_data()
 elif page == "Energy production":
     fourth()
 elif page == "Energy plots":
