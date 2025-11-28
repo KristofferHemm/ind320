@@ -19,7 +19,7 @@ if 'query_results' not in st.session_state:
 
 def controls():
 
-    st.subheader("Interactive map of Norway displaying weather data")
+    st.subheader("Interactive map of Norway displaying energy data")
     st.write("Please make your selections below to choose which data you want displayed on the map.\n \
     Then click the Query data button.")
 
