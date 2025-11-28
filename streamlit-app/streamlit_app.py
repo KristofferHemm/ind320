@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-from second import second_page
 from third import third_page
 from fourth import fourth_page
 from fifth import fifth_page
@@ -15,10 +14,6 @@ from sliding_window_correlation import sliding_window_page
 def home():
     st.title("Home Page")
     st.write("Use the navigation bar to the left")
-
-def second():
-    st.title("Second Page")
-    second_page()
 
 def third():
     st.title("Third Page")
@@ -53,13 +48,11 @@ def sliding_window():
     sliding_window_page()
 
 # Sidebar navigation
-page = st.sidebar.selectbox("Navigate", ["Home", "Map", "Snowdrift", "Sliding window", "Sarimax", "Fourth", "newA", "Second", "Third", "newB", "Fifth"])
+page = st.sidebar.selectbox("Navigate", ["Home", "Map", "Snowdrift", "Sliding window", "Sarimax", "Fourth", "newA", "Third", "newB", "Fifth"])
 
 # Display the selected page
 if page == "Home":
     home()
-elif page == "Second":
-    second()
 elif page == "Third":
     third()
 elif page == "Fourth":
