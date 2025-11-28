@@ -42,7 +42,11 @@ def sliding_window_corr(df, col_x, col_y, window_hours, lag_hours):
 
 
 def sliding_window_correlation():
-    st.header("Sliding Window Correlation: Energy vs weather")
+    st.subheader("Sliding Window Correlation: Energy vs Weather")
+    st.write("Please select a rande of years where you want to explore the correlation between energy and weather.")
+    st.write("Please select for which city in Norway you want to explore the correlation between energy and weather.")
+    st.write("Then select which energy group you want to explore.")
+    st.write("Then select which meteorological property you want to explore.")
 
     start_year, end_year = st.slider(
         "Select year range:",

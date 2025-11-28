@@ -9,12 +9,15 @@ if 'weather_data' not in st.session_state:
 
 def state_checker():
 
+    st.subheader("Snowdrift calculation and illustration")
+    st.write("The snowdrift will be calculated for the location you picked on the map on the previuos page.")
+    st.write("Please select the desired range of years you want to calculate snow drift.")
+
     # Check if latitude and longitude has bben selected
     if st.session_state.get("clicked_lat") is None or st.session_state.get("clicked_lon") is None :
         st.warning("Please select a location on the map page before calculating snow drift.")
         return
     
-    st.subheader("Selected Location")
     st.write(f"Latitude: {st.session_state.clicked_lat:.6f}")
     st.write(f"Longitude: {st.session_state.clicked_lon:.6f}")
 

@@ -12,8 +12,8 @@ def sarimax():
     if 'df' not in st.session_state:
         st.session_state.df = None
 
-    st.title("Forecasting of energy production and consumption")
-    st.subheader("Model used: SARIMAX")
+    st.subheader("Forecasting of energy production and consumption")
+    st.write("Model used: SARIMAX")
     st.write("Please select which data you want to see below, then click the Query Data button to load data into the plots.")
     st.write("When the data is loaded you can set the SARIMAX parameters below and press Run SARIMAX Forecast")
 
