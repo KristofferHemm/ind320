@@ -39,7 +39,7 @@ def calculate_snowdrift():
             st.success(f"Found {len(st.session_state.weather_data)} records")
             
 
-    if st.session_state.weather_data:
+    if st.session_state.weather_data is not None:
         # Extract month from date column
         st.session_state.weather_data['date'] = (st.session_state.weather_data['date'].dt.tz_localize(None))
         st.session_state.weather_data['date'] = pd.to_datetime(st.session_state.weather_data['date'])
