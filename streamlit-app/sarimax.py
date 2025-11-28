@@ -12,7 +12,10 @@ def sarimax():
     if 'df' not in st.session_state:
         st.session_state.df = None
 
-    st.title("SARIMAX Forecasting of energy production and consumption")
+    st.title("Forecasting of energy production and consumption")
+    st.subheader("Model used: SARIMAX")
+    st.write("Please select which data you want to see below, then click the Query Data button to load data into the plots.")
+    st.write("When the data is loaded you can set the SARIMAX parameters below and press Run SARIMAX Forecast")
 
     # Select timeframe for training and forecast
     st.subheader("Select Time Interval")
@@ -82,7 +85,7 @@ def sarimax():
 
         # Setting parameters
         st.subheader("SARIMAX Parameters")
-        
+
         forecast_days = st.number_input("Type in number of days to forecast. Default is 30 days", value=30)
 
         colA, colB, colC = st.columns(3)

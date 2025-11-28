@@ -39,7 +39,7 @@ def sliding_window():
     sliding_window_page()
 
 # Sidebar navigation
-page = st.sidebar.selectbox("Navigate", ["Home", "Weather data", "Weather data outliers", "Energy production", "Energy map", "newA", "Sarimax", "Snowdrift", "Sliding window"])
+page = st.sidebar.selectbox("Navigate", ["Home", "Weather data", "Weather data outliers", "Energy production", "Energy plots", "Energy map", "SARIMAX", "Snowdrift", "Sliding window"])
 
 # Display the selected page
 if page == "Home":
@@ -48,7 +48,7 @@ elif page == "Weather data":
     third()
 elif page == "Energy production":
     fourth()
-elif page == "newA":
+elif page == "Energy plots":
     newA()
 elif page == "Weather data outliers":
     newB()
@@ -56,7 +56,7 @@ elif page == "Energy map":
     map()
 elif page == "Snowdrift":
     snowdrift()
-elif page == "Sarimax":
+elif page == "SARIMAX":
     sarimax()
 elif page == "Sliding window":
     sliding_window()
