@@ -94,6 +94,28 @@ def third_page():
     Controls: Drop down for selecting column and slider for selecting month range and
     """
     
+    # Generate list of cities for user selection and set it as the session state
+    if 'selected_city' not in st.session_state:
+        st.session_state.selected_city = "Bergen"
+
+    cities = ["Bergen", "Oslo", "Kristiansand", "Trondheim", "Tromsø"]
+    st.session_state.selected_city = st.selectbox(
+    "Select a city:",
+    options=cities,
+    index=cities.index(st.session_state.selected_city)
+    )
+
+    # Generate list of years for user selection and set it as the session state
+    if 'selected_year' not in st.session_state:
+        st.session_state.selected_year = 2021
+
+    years = list(range(2021, 2025, 1))
+    st.session_state.selected_year = st.selectbox(
+        "Select a year:",
+        options=years,
+        index=years.index(st.session_state.selected_year)
+    )
+
     # Load data
     df = load_data_from_meteo(st.session_state.selected_year, st.session_state.selected_city)
 

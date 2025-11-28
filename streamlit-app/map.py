@@ -90,7 +90,6 @@ def choropleth():
     file = "data/energydata.geojson"
     base_dir = Path(__file__).resolve().parent
     path = base_dir / file
-    st.write(path)
     data = load_json(path)
     gdf = gpd.read_file(path)
 
