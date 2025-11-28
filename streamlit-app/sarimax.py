@@ -6,11 +6,12 @@ import plotly.graph_objects as go
 from datetime import date
 from load_data import load_data_from_mongodb
 
-# Initialize session state for storing results
-if 'df' not in st.session_state:
-    st.session_state.df = None
-
 def sarimax():
+
+    # Initialize session state for storing results
+    if 'df' not in st.session_state:
+        st.session_state.df = None
+        
     st.title("SARIMAX Forecasting of energy production and consumption")
 
     # Select timeframe for training and forecast
