@@ -23,10 +23,6 @@ def fourth():
     st.title("Fourth Page")
     fourth_page()
 
-def fifth():
-    st.title("Fifth Page")
-    fifth_page()
-
 def newA():
     st.title("New A")
     newA_page()
@@ -48,7 +44,7 @@ def sliding_window():
     sliding_window_page()
 
 # Sidebar navigation
-page = st.sidebar.selectbox("Navigate", ["Home", "Map", "Snowdrift", "Sliding window", "Sarimax", "Fourth", "newA", "Third", "newB", "Fifth"])
+page = st.sidebar.selectbox("Navigate", ["Home", "Map", "Snowdrift", "Sliding window", "Sarimax", "Fourth", "newA", "Third", "newB"])
 
 # Display the selected page
 if page == "Home":
@@ -57,8 +53,6 @@ elif page == "Third":
     third()
 elif page == "Fourth":
     fourth()
-elif page == "Fifth":
-    fifth()
 elif page == "newA":
     newA()
 elif page == "newB":
