@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from home import home_page
 from third import third_page
 from fourth import fourth_page
 from newA import newA_page
@@ -11,8 +12,7 @@ from sliding_window_correlation import sliding_window_page
 
 # Define pages as functions
 def home():
-    st.title("Home Page")
-    st.write("Use the navigation bar to the left")
+    home_page()
 
 def third():
     st.title("Third Page")
