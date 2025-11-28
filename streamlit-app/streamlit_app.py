@@ -15,7 +15,6 @@ def home():
     home_page()
 
 def third():
-    st.title("Third Page")
     third_page()
 
 def fourth():

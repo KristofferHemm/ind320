@@ -93,11 +93,17 @@ def third_page():
     Create page containing line plot of the imported data.
     Controls: Drop down for selecting column and slider for selecting month range and
     """
+
+    st.subheader("Overview of energy data consumption in Norway")
+    st.write("Please make your selections below to choose which city and time interval you want to see data for.")
     
     # Generate list of cities for user selection and set it as the session state
     if 'selected_city' not in st.session_state:
         st.session_state.selected_city = "Bergen"
 
+    if st.session_state.selected_city is None:
+        st.session_state.selected_city = "Bergen"
+        
     cities = ["Bergen", "Oslo", "Kristiansand", "Trondheim", "Tromsø"]
     st.session_state.selected_city = st.selectbox(
         "Select a city:",
