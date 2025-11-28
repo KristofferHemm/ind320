@@ -18,9 +18,11 @@ if 'query_results' not in st.session_state:
     st.session_state.query_results = None
 
 def controls():
-    st.subheader("Choropleth Controls")
 
-   
+    st.subheader("Interactive map of Norway displaying energy data")
+    st.write("Please make your selections below to choose which data you want displayed on the map.")
+    st.write("Then click query data.")
+
     st.session_state.database = st.radio(
         "Dataset",
         ["Production", "Consumption"],
