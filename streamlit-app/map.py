@@ -104,7 +104,7 @@ def choropleth():
         st.session_state.clicked_area = None
 
     # Check if query results exist
-    if st.session_state.query_results is not None:
+    try:
         df = st.session_state.query_results
         
         # Aggregate data by pricearea - calculate mean quantitykwh
@@ -172,6 +172,7 @@ def choropleth():
                     st.session_state.clicked_area = row['ElSpotOmr']
                     st.session_state.clicked_lat = clicked_lat
                     st.session_state.clicked_lon = clicked_lon
+                    st.info(f"Selected area: {st.session_state.clicked_area}")
                     st.rerun()
                     break
         
@@ -184,10 +185,10 @@ def choropleth():
             clicked_area_no_space = st.session_state.clicked_area.replace(' ', '')
             area_data = aggregated_data[aggregated_data['pricearea'] == clicked_area_no_space]
             if not area_data.empty:
-                mean_value = area_data['quantitykwh'].values[0]
-                st.write(f"Mean Energy {st.session_state.database} : {mean_value:.2f} kWh")
+                mean_value = area_data['quantitykwh'].values[0] / 1000
+                st.write(f"Mean Energy {st.session_state.database} : {mean_value:.2f} MWh")
                     
-    else:
+    except:
         st.info("Please query the database first to display the map")
 
 

@@ -43,10 +43,11 @@ def sliding_window_corr(df, col_x, col_y, window_hours, lag_hours):
 
 def sliding_window_correlation():
     st.subheader("Sliding Window Correlation: Energy vs Weather")
-    st.write("Please select a rande of years where you want to explore the correlation between energy and weather.")
+    st.write("Please select a range of years where you want to explore the correlation between energy and weather.")
     st.write("Please select for which city in Norway you want to explore the correlation between energy and weather.")
     st.write("Then select which energy group you want to explore.")
     st.write("Then select which meteorological property you want to explore.")
+    st.write("Below the query data button you can play with different window lengths and lag for calculating the correlation.")
 
     start_year, end_year = st.slider(
         "Select year range:",
@@ -143,9 +144,37 @@ def sliding_window_correlation():
         # Compute rolling correlation
         corr_series = sliding_window_corr(df_merged, st.session_state.met_var, st.session_state.energy_var, window, lag)
 
-        # Plotting
+         # Plotting meterological timeseries
         fig = go.Figure()
 
+        fig.add_trace(go.Scatter(
+            x=energy_data.index,
+            y=energy_data[st.session_state.energy_var],
+            mode="lines",
+            name=f"Plot of selected energy variable ({st.session_state.energy_var})"
+        ))
+        fig.update_yaxes(title_text=f"{st.session_state.energy_var}")
+        fig.update_xaxes(title_text="Time")
+        fig.update_layout(height=450, title=f"Plot of selected energy variable ({st.session_state.energy_var})")
+        st.plotly_chart(fig, use_container_width=True)
+        fig = go.Figure()
+
+        # Plotting meterological timeseries
+        fig = go.Figure()
+
+        fig.add_trace(go.Scatter(
+            x=weather_data.index,
+            y=weather_data[st.session_state.met_var],
+            mode="lines",
+            name=f"Plot of selected meteorological variable ({st.session_state.met_var})"
+        ))
+        fig.update_yaxes(title_text=f"{st.session_state.met_var}")
+        fig.update_xaxes(title_text="Time")
+        fig.update_layout(height=450, title=f"Plot of selected meteorological variable ({st.session_state.met_var})")
+        st.plotly_chart(fig, use_container_width=True)
+        fig = go.Figure()
+
+        # Plotting correlation
         fig.add_trace(go.Scatter(
             x=corr_series.index,
             y=corr_series.values,
@@ -154,7 +183,7 @@ def sliding_window_correlation():
         ))
         fig.update_yaxes(title_text="Correlation", range=[-1,1])
         fig.update_xaxes(title_text="Time")
-        fig.update_layout(height=450, title=f"Sliding Window Correlation (lag={lag}h, window={window}h)")
+        fig.update_layout(height=450, title=f"Sliding Window Correlation ({st.session_state.met_var} vs {st.session_state.energy_var}) (lag={lag}h, window={window}h)")
         st.plotly_chart(fig, use_container_width=True)
 
 

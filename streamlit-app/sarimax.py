@@ -11,6 +11,10 @@ def sarimax():
     # Initialize session state for storing results
     if 'df' not in st.session_state:
         st.session_state.df = None
+    if 'selected_city' not in st.session_state:
+        st.session_state.selected_city = None
+    if 'selected_pricearea' not in st.session_state:
+        st.session_state.selected_pricearea = None
 
     st.subheader("Forecasting of energy production and consumption")
     st.write("Model used: SARIMAX")
@@ -18,7 +22,7 @@ def sarimax():
     st.write("When the data is loaded you can set the SARIMAX parameters below and press Run SARIMAX Forecast")
 
     # Select timeframe for training and forecast
-    st.subheader("Select Time Interval")
+    #st.write("Select Time Interval")
     col1, col2 = st.columns(2)
 
     with col1:
@@ -36,6 +40,25 @@ def sarimax():
             min_value=date(2021, 1, 1),
             max_value=date(2024, 12, 31)
         )
+
+    # Select city 
+    cities = ["Bergen", "Oslo", "Kristiansand", "Trondheim", "Tromsø"]
+    st.session_state.selected_city = st.selectbox(
+    "Select a city:",
+    options=cities
+    )
+
+    # Map cities to price area
+    cities = {
+    'Oslo': "NO1",
+    'Kristiansand': "NO2",
+    'Trondheim': "NO3",
+    'Tromsø': "NO4",    
+    'Bergen':"NO5"  
+    }
+
+    st.session_state.selected_pricearea = cities[st.session_state.selected_city]
+    st.write(f'{st.session_state.selected_city} is in price area {st.session_state.selected_pricearea}')
 
     # Select production/consumption    
     st.session_state.database = st.radio(
@@ -72,11 +95,14 @@ def sarimax():
                     from_date,
                     to_date
                 )
-                
+
+                # Subset the dataframe for selected price area
+                st.session_state.df = st.session_state.df[st.session_state.df['pricearea'] == st.session_state.selected_pricearea]
                 st.success(f"Found {len(st.session_state.df)} records")
     
     # Only process the dataframe if it exists
     if st.session_state.df is not None:
+
         # Ensure starttime is in datetime format
         st.session_state.df['starttime'] = pd.to_datetime(st.session_state.df['starttime'])
 
@@ -207,7 +233,7 @@ def sarimax():
                 ))
 
                 fig.update_layout(
-                    title=f"SARIMAX Forecast for ENERGY {st.session_state.database}, type {st.session_state.group_selected}",
+                    title=f"SARIMAX Forecast for ENERGY {st.session_state.database}, in pricearea {st.session_state.selected_pricearea}, type {st.session_state.group_selected}",
                     xaxis_title="Time",
                     yaxis_title="kWh",
                     height=600,
