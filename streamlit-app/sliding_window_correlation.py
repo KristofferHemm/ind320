@@ -155,7 +155,7 @@ def sliding_window_correlation():
         ))
         fig.update_yaxes(title_text=f"{st.session_state.energy_var}")
         fig.update_xaxes(title_text="Time")
-        fig.update_layout(height=450, title=f"Plot of selected energy variable ({st.session_state.group_selected })")
+        fig.update_layout(height=450, title=f"Plot of selected energy variable ({st.session_state.group_selected})")
         st.plotly_chart(fig, use_container_width=True)
         fig = go.Figure()
 
@@ -183,7 +183,7 @@ def sliding_window_correlation():
         ))
         fig.update_yaxes(title_text="Correlation", range=[-1,1])
         fig.update_xaxes(title_text="Time")
-        fig.update_layout(height=450, title=f"Sliding Window Correlation ({st.session_state.met_var} vs {st.session_state.energy_var}) (lag={lag}h, window={window}h)")
+        fig.update_layout(height=450, title=f"Sliding Window Correlation ({st.session_state.met_var} vs {st.session_state.group_selected}) with lag={lag}h, window={window}h")
         st.plotly_chart(fig, use_container_width=True)
 
 
