@@ -11,9 +11,9 @@ def energy_production_page():
     if 'df' not in st.session_state:
         st.session_state.df = None
 
-        if st.button("Query Data"):
-            with st.spinner("Querying database..."):
-                st.session_state.df = load_data_from_mongodb_no_arguments()
+    if st.button("Query Data"):
+        with st.spinner("Querying database..."):
+            st.session_state.df = load_data_from_mongodb_no_arguments()
 
     if st.session_state.df is not None:
         col1, col2 = st.columns(2)

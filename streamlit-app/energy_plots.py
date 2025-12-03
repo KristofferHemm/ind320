@@ -196,8 +196,8 @@ def energy_plots_page():
         st.session_state.df = None
     
     st.subheader("Seasonal-Trend decomposition and Spectrogram of energy data")
-    st.write("Please click the Query Data button to load data into the plots.")
-    st.write("Please choose which plot you want to see below.")
+    st.write("If you did not query data on the previous page, please click the Query Data button to load data into the plots.")
+    st.write("Please choose which plot you want to see below the Query Data button.")
 
     # Load data
     if st.button("Query Data"):

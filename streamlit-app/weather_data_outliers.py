@@ -212,8 +212,8 @@ def weather_data_outliers_page():
     # Content for Tab 1
     with tab1:
         st.header("SPC analysis")
-        st.write(f"Using data from year: {selected_year}")
-        st.write(f"Using data from city: {selected_city}")
+        st.write(f"Using data from year: {st.session_state.selected_year}")
+        st.write(f"Using data from city: {st.session_state.selected_city}")
         fig, summary = plot_summary_satv(df)
         st.plotly_chart(fig)
         st.write(summary.head())
@@ -221,8 +221,8 @@ def weather_data_outliers_page():
     # Content for Tab 2
     with tab2:
         st.header("LOF analysis")
-        st.write(f"Using data from year: {selected_year}")
-        st.write(f"Using data from city: {selected_city}")
+        st.write(f"Using data from year: {st.session_state.selected_year}")
+        st.write(f"Using data from city: {st.session_state.selected_year}")
         fig, summary = plot_precip_anomalies(df)
         st.plotly_chart(fig)
         st.write(summary)
