@@ -151,11 +151,11 @@ def sliding_window_correlation():
             x=energy_data.index,
             y=energy_data[st.session_state.energy_var],
             mode="lines",
-            name=f"Plot of selected energy variable ({st.session_state.energy_var})"
+            name=f"Plot of selected energy variable ({st.session_state.group_selected})"
         ))
         fig.update_yaxes(title_text=f"{st.session_state.energy_var}")
         fig.update_xaxes(title_text="Time")
-        fig.update_layout(height=450, title=f"Plot of selected energy variable ({st.session_state.energy_var})")
+        fig.update_layout(height=450, title=f"Plot of selected energy variable ({st.session_state.group_selected })")
         st.plotly_chart(fig, use_container_width=True)
         fig = go.Figure()
 
