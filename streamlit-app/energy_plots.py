@@ -192,30 +192,33 @@ def plot_spectrogram_stft(df, pricearea='NO1', productiongroup='hydro',
 def energy_plots_page():
 
     # Initialize df
-    df = None
+    if 'df' not in st.session_state:
+        st.session_state.df = None
     
     st.subheader("Seasonal-Trend decomposition and Spectrogram of energy data")
     st.write("Please click the Query Data button to load data into the plots.")
     st.write("Please choose which plot you want to see below.")
 
-    tab1, tab2 = st.tabs(["STL analysis", "Spectrogram"])
-
     # Load data
     if st.button("Query Data"):
         with st.spinner("Querying database..."):
-            df = load_data_from_mongodb_no_arguments()
+            st.session_state.df = load_data_from_mongodb_no_arguments()
 
-    if df is not None:
+    tab1, tab2 = st.tabs(["STL analysis", "Spectrogram"])
+
+    if st.session_state.df is not None:
         # Content for Tab 1
         with tab1:
             st.header("STL analysis")
-            fig = loess_decompose_and_plot(df)
+            with st.spinner("Doing STL analysis..."):
+                fig = loess_decompose_and_plot(st.session_state.df)
             st.plotly_chart(fig)
 
         # Content for Tab 2
         with tab2:
             st.header("Spectrogram")
-            fig = plot_spectrogram_stft(df)
+            with st.spinner("Creating spectrogram..."):
+                fig = plot_spectrogram_stft(st.session_state.df)
             st.plotly_chart(fig)
     else:
         st.write("Please query the data to see the plots")

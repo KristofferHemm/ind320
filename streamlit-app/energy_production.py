@@ -3,18 +3,19 @@ import plotly.express as px
 from load_data import load_data_from_mongodb_no_arguments
 
 def energy_production_page():
-
-    st.subheader("Overview of Norwegian energy production")
+    
+    st.subheader("Overview of Norwegian weather data")
     st.write("Please click the Query Data button to load data into the plots.")
 
-    # Initialize df
-    df = None
+    # Initialize session state for storing results
+    if 'df' not in st.session_state:
+        st.session_state.df = None
 
-    if st.button("Query Data"):
-        with st.spinner("Querying database..."):
-            df = load_data_from_mongodb_no_arguments()
+        if st.button("Query Data"):
+            with st.spinner("Querying database..."):
+                st.session_state.df = load_data_from_mongodb_no_arguments()
 
-    if df is not None:
+    if st.session_state.df is not None:
         col1, col2 = st.columns(2)
 
         # Set a fixed height for containers
@@ -25,7 +26,7 @@ def energy_production_page():
             st.header("Energy Produciton by Price Area")
             # Radio buttons to select price area
             # Get unique price areas
-            price_areas = sorted(df['pricearea'].unique())
+            price_areas = sorted(st.session_state.df['pricearea'].unique())
 
             with st.container(height=CONTAINER_HEIGHT):
                 st.subheader("Select Price Area:")
@@ -35,7 +36,7 @@ def energy_production_page():
                     horizontal=True
                 )
             # Filter data by selected price area
-            filtered_df = df[df['pricearea'] == selected_area]
+            filtered_df = st.session_state.df[st.session_state.df['pricearea'] == selected_area]
 
             # Group by productiongroup and sum quantitykwh
             grouped_data = filtered_df.groupby('productiongroup')['quantitykwh'].sum().reset_index()
@@ -69,11 +70,11 @@ def energy_production_page():
             
             st.header("Energy Production Analysis")
             
-            df['year_month'] = df['starttime'].dt.to_period('M').astype(str)
+            st.session_state.df['year_month'] = st.session_state.df['starttime'].dt.to_period('M').astype(str)
 
             # Get unique values for filters
-            production_groups = sorted(df['productiongroup'].unique().tolist())
-            available_months = sorted(df['year_month'].unique().tolist())
+            production_groups = sorted(st.session_state.df['productiongroup'].unique().tolist())
+            available_months = sorted(st.session_state.df['year_month'].unique().tolist())
 
             with st.container(height=CONTAINER_HEIGHT):
                 # Production Groups filter
@@ -101,9 +102,9 @@ def energy_production_page():
                 if not isinstance(selected_groups, list):
                     selected_groups = [selected_groups]
                 
-                filtered_df = df[
-                    (df['productiongroup'].isin(selected_groups)) & 
-                    (df['year_month'] == selected_month)
+                filtered_df = st.session_state.df[
+                    (st.session_state.df['productiongroup'].isin(selected_groups)) & 
+                    (st.session_state.df['year_month'] == selected_month)
                 ].copy()
                 
                 if not filtered_df.empty:
