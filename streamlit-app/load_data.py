@@ -1,16 +1,71 @@
 import streamlit as st
 import pandas as pd
+import json
 from pymongo import MongoClient
 import openmeteo_requests
 from retry_requests import retry
 import requests_cache
+from datetime import datetime, time
 
 @st.cache_data
 def load_data(file):
     return pd.read_csv(file)
 
 @st.cache_data
-def load_data_from_mongodb():
+def load_json(file):
+    with open(file, "r") as f:
+        return json.load(f)
+
+@st.cache_data
+def load_data_from_mongodb(namespace, group, start_date=None, end_date=None):
+    """Load all data from MongoDB and return as pandas DataFrame"""
+
+    # Connecting to MongoDB
+    uri = st.secrets["mongo"]["uri"]
+    db_name = st.secrets["mongo"]["database"]
+    client = MongoClient(uri)
+    db = client[db_name]
+    collection = db[namespace]
+
+    # Determine the correct field name based on namespace
+    if namespace == 'production_NO1':
+        group_field = 'productiongroup'
+    elif namespace == 'consumption_NO1':
+        group_field = 'consumptiongroup'
+    else:
+        raise ValueError("Invalid namespace")
+    
+    # Build the query
+    query = {group_field: group}
+    
+    # Add date filter if dates are provided
+    if start_date is not None and end_date is not None:
+        start_datetime = datetime.combine(start_date, time(0, 0, 0))
+        end_datetime = datetime.combine(end_date, time(23, 59, 59))
+        
+        # Use 'starttime' as the datetime field name (based on your second query)
+        query['starttime'] = {
+            '$gte': start_datetime,
+            '$lte': end_datetime
+        }
+
+    # Execute query
+    results = list(collection.find(query))
+    
+    # Close connection
+    client.close()
+    
+    # Convert to DataFrame
+    df = pd.DataFrame(results)
+    
+    # Remove the MongoDB _id field 
+    if '_id' in df.columns:
+        df = df.drop('_id', axis=1)
+    
+    return df
+
+@st.cache_data
+def load_data_from_mongodb_no_arguments():
     """Load all data from MongoDB and return as pandas DataFrame"""
     # Connecting to MongoDB
     uri = st.secrets["mongo"]["uri"]
@@ -80,8 +135,9 @@ def load_data_from_meteo(year, city):
     "start_date": start,
     "end_date": end,
     "hourly": ["temperature_2m", "precipitation", "wind_speed_10m", "wind_gusts_10m", "wind_direction_10m"],
+    "models": "era5"
     }
-    url = "https://historical-forecast-api.open-meteo.com/v1/forecast"
+    url = "https://archive-api.open-meteo.com/v1/archive"
     responses = openmeteo.weather_api(url, params=params)
     response = responses[0]
     # Process hourly data. The order of variables needs to be the same as requested.
@@ -104,6 +160,57 @@ def load_data_from_meteo(year, city):
     hourly_data["wind_speed_10m"] = hourly_wind_speed_10m
     hourly_data["wind_gusts_10m"] = hourly_wind_gusts_10m
     hourly_data["wind_direction_10m"] = hourly_wind_direction_10m
+
+    df = pd.DataFrame(data = hourly_data)
+
+    # Need to convert to float64 for the data to work in Streamlit
+    for col in df.select_dtypes(include=["float32", "float16"]).columns:
+        df[col] = df[col].astype("float64")
+
+    return df
+
+
+@st.cache_data
+def load_data_from_meteo_snow(year):
+    # Setup the Open-Meteo API client with cache and retry on error
+    cache_session = requests_cache.CachedSession('.cache', expire_after = 3600)
+    retry_session = retry(cache_session, retries = 5, backoff_factor = 0.2)
+    openmeteo = openmeteo_requests.Client(session = retry_session)
+
+    start = f'{year}-01-01'
+    end = f'{year}-12-31'
+
+    params = {
+    "latitude": st.session_state.clicked_lat, 
+    "longitude": st.session_state.clicked_lon,
+    "start_date": start,
+    "end_date": end,
+    "hourly": ["temperature_2m", "precipitation", "wind_speed_10m", "wind_gusts_10m", "wind_direction_10m"],
+    "models": "era5",
+    }
+    url = "https://archive-api.open-meteo.com/v1/archive"
+    responses = openmeteo.weather_api(url, params=params)
+    response = responses[0]
+    # Process hourly data. The order of variables needs to be the same as requested.
+    hourly = response.Hourly()
+    hourly_temperature_2m = hourly.Variables(0).ValuesAsNumpy()
+    hourly_precipitation = hourly.Variables(1).ValuesAsNumpy()
+    hourly_wind_speed_10m = hourly.Variables(2).ValuesAsNumpy()
+    hourly_wind_gusts_10m = hourly.Variables(3).ValuesAsNumpy()
+    hourly_wind_direction_10m = hourly.Variables(4).ValuesAsNumpy()
+
+    hourly_data = {"date": pd.date_range(
+        start = pd.to_datetime(hourly.Time(), unit = "s", utc = True),
+        end =  pd.to_datetime(hourly.TimeEnd(), unit = "s", utc = True),
+        freq = pd.Timedelta(seconds = hourly.Interval()),
+        inclusive = "left"
+    )}
+
+    hourly_data["temperature_2m (°C)"] = hourly_temperature_2m
+    hourly_data["precipitation (mm)"] = hourly_precipitation
+    hourly_data["wind_speed_10m (m/s)"] = hourly_wind_speed_10m
+    hourly_data["wind_gusts_10m"] = hourly_wind_gusts_10m
+    hourly_data["wind_direction_10m (°)"] = hourly_wind_direction_10m
 
     df = pd.DataFrame(data = hourly_data)
 

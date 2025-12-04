@@ -21,20 +21,24 @@ def plot_summary_satv(df, cutoff=100, k=3.0):
     """
 
     df = df.copy()
-    
+
     # High pass filtering
-    temp_dct_ortho = dct(df.temperature_2m, norm='ortho')
+    temp_dct_ortho = dct(df['temperature_2m'], norm='ortho')
     temp_dct_ortho[:cutoff] = 0
     df['temp_highpass'] = idct(temp_dct_ortho, norm='ortho')
+    df['seasonal'] = df['temperature_2m'] - df['temp_highpass']
 
     # Seasonally adjusted temperature variations
     median_satv = np.median(df['temp_highpass'])
     mad_satv = np.median(np.abs(df['temp_highpass'] - median_satv))
-    ucl = median_satv + k * mad_satv
-    lcl = median_satv - k * mad_satv
+    upper_satv = median_satv + k * mad_satv
+    lower_satv = median_satv - k * mad_satv
+
+    df['ucl'] = df['seasonal'] + upper_satv
+    df['lcl'] = df['seasonal'] + lower_satv
 
     # Add outliers to df
-    df['is_outlier'] = (df['temp_highpass'] > ucl) | (df['temp_highpass'] < lcl)
+    df['is_outlier'] = (df['temp_highpass'] > upper_satv) | (df['temp_highpass'] < lower_satv)
 
     # Plotting
     fig = go.Figure()
@@ -58,16 +62,16 @@ def plot_summary_satv(df, cutoff=100, k=3.0):
 
     # SPC boundaries (horizontal lines)
     fig.add_trace(go.Scatter(
-        x=[df['date'].min(), df['date'].max()],
-        y=[ucl, ucl],
+        x=df['date'],
+        y=df['ucl'],
         mode='lines',
         name='UCL (Upper Control Limit)',
         line=dict(color='green', dash='dash')
     ))
     
     fig.add_trace(go.Scatter(
-        x=[df['date'].min(), df['date'].max()],
-        y=[lcl, lcl],
+        x=df['date'],
+        y=df['lcl'],
         mode='lines',
         name='LCL (Lower Control Limit)',
         line=dict(color='green', dash='dash')
@@ -110,6 +114,16 @@ def plot_summary_satv(df, cutoff=100, k=3.0):
     return fig, summary
 
 def plot_precip_anomalies(df, outlier_fraction=0.01):
+    """
+    Input:
+    df : pd.DataFrame
+    outlier_fraction : float
+
+    Returns
+    -------
+    fig : plotly.graph_objects.Figure
+    summary : pd.DataFrame
+    """
     
     df = df.copy()
     df["date"] = pd.to_datetime(df["date"])
@@ -121,16 +135,14 @@ def plot_precip_anomalies(df, outlier_fraction=0.01):
     lof = LocalOutlierFactor(n_neighbors=20, contamination=outlier_fraction)
     labels = lof.fit_predict(X)
     df["anomaly"] = labels == -1
-    
     anomalies = df[df["anomaly"]]
-    normal = df[~df["anomaly"]]
 
-    # Create Plotly figure 
+    # Plotting
     fig = go.Figure()
 
     # Normal points (blue line)
     fig.add_trace(go.Scatter(
-        x=normal["date"], y=normal["precipitation"],
+        x=df["date"], y=df["precipitation"],
         mode="lines", name="Normal", line=dict(color="blue")
     ))
 
@@ -149,11 +161,12 @@ def plot_precip_anomalies(df, outlier_fraction=0.01):
         legend_title="Type"
     )
 
+    # Create summary
     summary_data = {
             "Total Points": [len(df)],
             "Detected Anomalies": [len(anomalies)],
             "Anomaly %": [len(anomalies) / len(df) * 100],
-            "Normal Mean": [normal["precipitation"].mean()],
+            "Normal Mean": [df["precipitation"].mean()],
             "Anomaly Mean": [anomalies["precipitation"].mean()],
             "Anomaly Max": [anomalies["precipitation"].max()],
             "Anomaly Min": [anomalies["precipitation"].min()],
@@ -166,11 +179,21 @@ def plot_precip_anomalies(df, outlier_fraction=0.01):
 
 
 
-def newB_page():
+def weather_data_outliers_page():
     
+    st.subheader("Outlier and anomalie detection in the Norwegian weather data")
+    st.write("The data displayed on this page is reflected in the choice you made on the Weather data page.")
+    st.write("The city of Bergen for the year 2021 is the default selection.")
+    st.write("If you made a selection on the Weather data page, this selection will be reflected on this page.")
     st.write("Please choose which plot you want to see below.")
 
     tab1, tab2 = st.tabs(["SPC analysis", "LOF analysis"])
+
+    if 'selected_year' not in st.session_state:
+        st.session_state.selected_year = 2021
+    
+    if 'selected_city' not in st.session_state:
+        st.session_state.selected_city = "Bergen"
 
     if 'selected_year' in st.session_state:
         selected_year = st.session_state.selected_year
@@ -189,8 +212,8 @@ def newB_page():
     # Content for Tab 1
     with tab1:
         st.header("SPC analysis")
-        st.write(f"Using data from year: {selected_year}")
-        st.write(f"Using data from city: {selected_city}")
+        st.write(f"Using data from year: {st.session_state.selected_year}")
+        st.write(f"Using data from city: {st.session_state.selected_city}")
         fig, summary = plot_summary_satv(df)
         st.plotly_chart(fig)
         st.write(summary.head())
@@ -198,8 +221,8 @@ def newB_page():
     # Content for Tab 2
     with tab2:
         st.header("LOF analysis")
-        st.write(f"Using data from year: {selected_year}")
-        st.write(f"Using data from city: {selected_city}")
+        st.write(f"Using data from year: {st.session_state.selected_year}")
+        st.write(f"Using data from city: {st.session_state.selected_year}")
         fig, summary = plot_precip_anomalies(df)
         st.plotly_chart(fig)
         st.write(summary)

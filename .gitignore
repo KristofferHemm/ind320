@@ -19,5 +19,7 @@ D2Dbook/_build
 # Ignore secrets.toml
 secrets.toml
 
+# Ignore folders
 .vscode/
 .cache.sqlite
+.ipynb_checkpoints

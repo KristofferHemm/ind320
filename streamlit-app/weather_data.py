@@ -1,7 +1,7 @@
 import streamlit as st
 import altair as alt
 import pandas as pd
-from load_data import load_data
+from load_data import load_data, load_data_from_meteo
 
 def month_slicer(df):
 
@@ -11,7 +11,7 @@ def month_slicer(df):
     Output: tuple
     """
 
-    df['time'] = pd.to_datetime(df['time'])
+    df['time'] = pd.to_datetime(df['date'])
     df['month'] = df['time'].dt.to_period('M').astype(str)
 
     # Create month slicer
@@ -33,7 +33,7 @@ def column_slicer(df):
     Output: list, string
     """
 
-    column_options = ['All columns'] + [col for col in df.columns if col not in ['time', 'month']]
+    column_options = ['All columns'] + [col for col in df.columns if col not in ['date', 'time', 'month']]
     selected_column = st.selectbox('Select which column to view', column_options)
     
     return column_options, selected_column
@@ -87,15 +87,43 @@ def plotter(selected_column, column_options, df):
     st.altair_chart(chart, use_container_width=True)
 
 
-def third_page():
+def weather_data_page():
 
     """
     Create page containing line plot of the imported data.
     Controls: Drop down for selecting column and slider for selecting month range and
     """
+
+    st.subheader("Overview of energy data consumption in Norway")
+    st.write("Please make your selections below to choose which city and time interval you want to see data for.")
     
+    # Generate list of cities for user selection and set it as the session state
+    if 'selected_city' not in st.session_state:
+        st.session_state.selected_city = "Bergen"
+
+    if st.session_state.selected_city is None:
+        st.session_state.selected_city = "Bergen"
+        
+    cities = ["Bergen", "Oslo", "Kristiansand", "Trondheim", "Tromsø"]
+    st.session_state.selected_city = st.selectbox(
+        "Select a city:",
+        options=cities,
+        index=cities.index(st.session_state.selected_city)
+        )
+
+    # Generate list of years for user selection and set it as the session state
+    if 'selected_year' not in st.session_state:
+        st.session_state.selected_year = 2021
+
+    years = list(range(2021, 2025, 1))
+    st.session_state.selected_year = st.selectbox(
+        "Select a year:",
+        options=years,
+        index=years.index(st.session_state.selected_year)
+    )
+
     # Load data
-    df = load_data('open-meteo-subset.csv')
+    df = load_data_from_meteo(st.session_state.selected_year, st.session_state.selected_city)
 
     # Create slicers and filter data
     selected_months = month_slicer(df)    

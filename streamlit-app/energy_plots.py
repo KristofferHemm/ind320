@@ -1,13 +1,12 @@
 import pandas as pd
 import streamlit as st
-import matplotlib.pylab as plt
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
 import numpy as np
 from statsmodels.tsa.seasonal import STL
 from statsmodels.nonparametric.smoothers_lowess import lowess
 from scipy.signal import stft
-from load_data import load_data_from_mongodb
-
-
+from load_data import load_data_from_mongodb_no_arguments
 
 def _make_odd(x):
     """Return an odd integer >= 3 from x (int or None)."""
@@ -46,7 +45,7 @@ def loess_decompose_and_plot(
     lowess_frac=0.1
     
     Returns:
-    fig : matplotlib.figure.Figure
+    fig : plotly.graph_objects.Figure
     """
 
     df = df.copy()
@@ -68,31 +67,57 @@ def loess_decompose_and_plot(
     res = stl.fit()
     
     lowess_sm = lowess(series.values, np.arange(n), frac=lowess_frac, return_sorted=False)
-
-    # Plotting
-    fig, axes = plt.subplots(4, 1, figsize=(12, 8), sharex=True)
+    
+    fig = make_subplots(
+        rows=4, cols=1,
+        shared_xaxes=True,
+        vertical_spacing=0.05,
+        subplot_titles=('Original series and LOWESS overlay', 'Trend', 'Seasonal', 'Residual')
+    )
     
     # Original series
-    axes[0].plot(series.index, series.values)
-    axes[0].set_ylabel('quantitykwh')
-    axes[0].set_title('Original series and LOWESS overlay')
-    axes[0].plot(series.index, lowess_sm, linestyle='--')
+    fig.add_trace(
+        go.Scatter(x=series.index, y=series.values, mode='lines', name='Original'),
+        row=1, col=1
+    )
+    fig.add_trace(
+        go.Scatter(x=series.index, y=lowess_sm, mode='lines', name='LOWESS', 
+                   line=dict(dash='dash')),
+        row=1, col=1
+    )
     
     # Trend
-    axes[1].plot(series.index, res.trend)
-    axes[1].set_ylabel('Trend')
+    fig.add_trace(
+        go.Scatter(x=series.index, y=res.trend, mode='lines', name='Trend'),
+        row=2, col=1
+    )
     
     # Seasonal
-    axes[2].plot(series.index, res.seasonal)
-    axes[2].set_ylabel('Seasonal')
+    fig.add_trace(
+        go.Scatter(x=series.index, y=res.seasonal, mode='lines', name='Seasonal'),
+        row=3, col=1
+    )
     
     # Residual
-    axes[3].plot(series.index, res.resid)
-    axes[3].set_ylabel('Residual')
-    axes[3].set_xlabel('time')
+    fig.add_trace(
+        go.Scatter(x=series.index, y=res.resid, mode='lines', name='Residual'),
+        row=4, col=1
+    )
     
+    # Update axes labels
+    fig.update_yaxes(title_text="quantitykwh", row=1, col=1)
+    fig.update_yaxes(title_text="Trend", row=2, col=1)
+    fig.update_yaxes(title_text="Seasonal", row=3, col=1)
+    fig.update_yaxes(title_text="Residual", row=4, col=1)
+    fig.update_xaxes(title_text="time", row=4, col=1)
     
-    plt.tight_layout()
+    # Update layout
+    fig.update_layout(
+        height=800,
+        showlegend=True,
+        hovermode='x unified'
+    )
+    
     return fig
 
 
@@ -118,9 +143,10 @@ def plot_spectrogram_stft(df, pricearea='NO1', productiongroup='hydro',
 
     Returns
     -------
-    fig : matplotlib.figure.Figure
+    fig : plotly.graph_objects.Figure
 
     """
+    
     # Filter data
     dff = df[(df['pricearea'] == pricearea) & (df['productiongroup'] == productiongroup)].copy()
     if dff.empty:
@@ -143,38 +169,56 @@ def plot_spectrogram_stft(df, pricearea='NO1', productiongroup='hydro',
     # Compute STFT
     f, t, Zxx = stft(signal, fs=fs, nperseg=nperseg, noverlap=noverlap)
 
-    # Plot spectrogram
-    fig, ax = plt.subplots(figsize=(10, 4))
-    im = ax.pcolormesh(t, f, np.abs(Zxx), shading='gouraud', cmap='viridis')
+    # Create Plotly heatmap
+    fig = go.Figure(data=go.Heatmap(
+        x=t,
+        y=f,
+        z=np.abs(Zxx),
+        colorscale='Viridis',
+        colorbar=dict(title='|Amplitude|')
+    ))
 
-    ax.set_title(f"Spectrogram (STFT) for {productiongroup} in {pricearea}")
-    ax.set_ylabel('Frequency [Hz]')
-    ax.set_xlabel('Time [s]')
-    fig.colorbar(im, ax=ax, label='|Amplitude|')
+    fig.update_layout(
+        title=f"Spectrogram (STFT) for {productiongroup} in {pricearea}",
+        xaxis_title='Time [s]',
+        yaxis_title='Frequency [Hz]',
+        width=1000,
+        height=400
+    )
 
-    plt.tight_layout()
     return fig
 
 
+def energy_plots_page():
 
-
-def newA_page():
+    # Initialize df
+    if 'df' not in st.session_state:
+        st.session_state.df = None
     
-    st.write("Please choose which plot you want to see below.")
+    st.subheader("Seasonal-Trend decomposition and Spectrogram of energy data")
+    st.write("If you did not query data on the previous page, please click the Query Data button to load data into the plots.")
+    st.write("Please choose which plot you want to see below the Query Data button.")
+
+    # Load data
+    if st.button("Query Data"):
+        with st.spinner("Querying database..."):
+            st.session_state.df = load_data_from_mongodb_no_arguments()
 
     tab1, tab2 = st.tabs(["STL analysis", "Spectrogram"])
 
-    # Load data
-    df = load_data_from_mongodb()
-    
-    # Content for Tab 1
-    with tab1:
-        st.header("STL analysis")
-        fig = loess_decompose_and_plot(df)
-        st.pyplot(fig)
+    if st.session_state.df is not None:
+        # Content for Tab 1
+        with tab1:
+            st.header("STL analysis")
+            with st.spinner("Doing STL analysis..."):
+                fig = loess_decompose_and_plot(st.session_state.df)
+            st.plotly_chart(fig)
 
-    # Content for Tab 2
-    with tab2:
-        st.header("Spectrogram")
-        fig = plot_spectrogram_stft(df)
-        st.pyplot(fig)
+        # Content for Tab 2
+        with tab2:
+            st.header("Spectrogram")
+            with st.spinner("Creating spectrogram..."):
+                fig = plot_spectrogram_stft(st.session_state.df)
+            st.plotly_chart(fig)
+    else:
+        st.write("Please query the data to see the plots")
