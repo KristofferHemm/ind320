@@ -114,6 +114,8 @@ def sliding_window_correlation():
                 data = [load_data_from_meteo(year, st.session_state.selected_city) for year in years]
                 st.session_state.weather = pd.concat(data)
                 st.success(f"Found {len(st.session_state.weather)+len(st.session_state.energy_data)} records")
+        st.write("Energy data:", len(st.session_state.energy_data))
+        st.write("Weather data:", len(st.session_state.weather))
         
         if st.session_state.energy_data is not None and st.session_state.weather is not None:
             
@@ -122,10 +124,7 @@ def sliding_window_correlation():
             energy_data = energy_data[energy_data['pricearea']==cities[st.session_state.selected_city]]
             energy_data = energy_data[['starttime', st.session_state.energy_var]]
             weather_data = st.session_state.weather.copy()
-            weather_data = weather_data[['date', st.session_state.met_var]]
-            st.write("Energy data rows:", len(energy_data))
-            st.write("Weather data rows:", len(weather_data))
-            
+            weather_data = weather_data[['date', st.session_state.met_var]]         
 
             # Standardize datetime
             energy_data = standardize_datetime(energy_data)
@@ -138,7 +137,6 @@ def sliding_window_correlation():
             if df_merged.empty:
                 st.warning("No overlapping timestamps between weather and energy data.")
                 return
-            st.write("Merged rows:", len(df_merged))
 
             # Set window and lag parameters
 
