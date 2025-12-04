@@ -115,6 +115,7 @@ def sliding_window_correlation():
                 data = [load_data_from_meteo(year, st.session_state.selected_city) for year in years]
                 st.session_state.weather = pd.concat(data)
                 st.success(f"Found {len(st.session_state.weather)+len(st.session_state.energy_data)} records")
+                st.write("asdf")
                 st.write("Energy data:", len(st.session_state.energy_data))
                 st.write("Weather data:", len(st.session_state.weather))
         
