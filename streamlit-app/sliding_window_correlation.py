@@ -58,10 +58,10 @@ def sliding_window_correlation():
             step=1
         )
 
-        cities = ["Bergen", "Oslo", "Kristiansand", "Trondheim", "Tromsø"]
+        cities_list = ["Bergen", "Oslo", "Kristiansand", "Trondheim", "Tromsø"]
         st.session_state.selected_city = st.selectbox(
         "Select a city:",
-        options=cities
+        options=cities_list
         )
 
         # Map cities to price area
@@ -114,7 +114,7 @@ def sliding_window_correlation():
                 data = [load_data_from_meteo(year, st.session_state.selected_city) for year in years]
                 st.session_state.weather = pd.concat(data)
                 st.success(f"Found {len(st.session_state.weather)+len(st.session_state.energy_data)} records")
-
+        
         if st.session_state.energy_data is not None and st.session_state.weather is not None:
             
             # Filter on selected price_area or meteorological property
@@ -136,6 +136,10 @@ def sliding_window_correlation():
                 st.warning("No overlapping timestamps between weather and energy data.")
                 return
             
+            st.write("Energy data rows:", len(energy_data))
+            st.write("Weather data rows:", len(weather_data))
+            st.write("Merged rows:", len(df_merged))
+
             # Set window and lag parameters
 
             col1, col2 = st.columns(2)
