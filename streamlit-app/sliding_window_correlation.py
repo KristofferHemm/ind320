@@ -114,8 +114,7 @@ def sliding_window_correlation():
             st.session_state.weather = pd.concat(data)
             st.success(f"Found {len(st.session_state.weather)+len(st.session_state.energy_data)} records")
 
-    if st.session_state.energy_data is not None and st.session_state.weather is not None:
-
+    try:
         # Filter on selected price_area or meteorological property
         energy_data = st.session_state.energy_data.copy()
         energy_data = energy_data[energy_data['pricearea']==cities[st.session_state.selected_city]]
@@ -186,6 +185,8 @@ def sliding_window_correlation():
         fig.update_layout(height=450, title=f"Sliding Window Correlation ({st.session_state.met_var} vs {st.session_state.group_selected}) with lag={lag}h, window={window}h")
         st.plotly_chart(fig, use_container_width=True)
 
+    except:
+        st.warning("Please press Query Data to query data and calculate correlations.")
 
 def sliding_window_page():
     sliding_window_correlation()
